@@ -1,0 +1,34 @@
+[[Rules]]
+  Match = "C"
+  Description = "Open C:\\"
+  Exe = "explorer.exe"
+  Args = ["C:\\"]
+
+[[Rules]]
+  Match = "C"
+  Description = "Open github.com"
+  Exe = "firefox.exe"
+  Args = ["https://github.com/"]
+
+[[Rules]]
+  Match = "ex1"
+  Description = "Example rule 1"
+  Exe = "dummy.exe"
+  Args = ["arg 1"]
+
+[[Rules]]
+  Match = "ex2"
+  Description = "Example rule 2"
+  Exe = "dummy.exe"
+  Args = ["arg 1", "arg 2"]
+
+[[Rules]]
+  Match = "ex3"
+  Description = "Example rule 3"
+  Exe = "dummy.exe"
+  Args = []
+
+[[Rules]]
+  Match = "ex_noargs"
+  Description = "Example rule (no args)"
+  Exe = "dummy.exe"
