@@ -37,8 +37,8 @@ func TestRuleFilterNoCopy(t *testing.T) {
 
 func TestRuleFilter(t *testing.T) {
 	var rules = []*Rule{
-		{"Demo 1", "Demo rule 1", "dummy.exe", nil, time.Unix(0, 0)},
-		{"demo 2", "Demo rule 2", "dummy.exe", nil, time.Unix(0, 0)},
+		{"Demo 1", "Description 1", "dummy.exe", nil, time.Unix(0, 0)},
+		{"demo 2", "Description 2", "dummy.exe", nil, time.Unix(0, 0)},
 		{"r/(a-z)+", "Sub test 1", "dummy.exe", nil, time.Unix(0, 0)},
 	}
 
@@ -52,6 +52,10 @@ func TestRuleFilter(t *testing.T) {
 		{"static 2", "demo 1", []string{"Demo 1"}},
 		{"static 3", "Demo 2", []string{"demo 2"}},
 		{"static 4", "emo", []string{}},
+		{"desc 1", "Desc", []string{"Demo 1", "demo 2"}},
+		{"desc 2", "Description 1", []string{"Demo 1"}},
+		{"desc fuzy 1", "cription", []string{"Demo 1", "demo 2"}},
+		{"desc fuzy 2", "cription 2", []string{"demo 2"}},
 
 		// ToDo: behaviour yet to be defined for regexp
 		/*{"regexp basic 1", "r", []string{"r/(a-z)+"}},

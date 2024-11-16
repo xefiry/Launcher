@@ -47,14 +47,16 @@ func FilterRules(rules []*Rule, input string) []*Rule {
 
 	lower_input := strings.ToLower(input)
 	var lower_match string
+	var lower_desc string
 
 	for _, rule := range rules {
 		lower_match = strings.ToLower(rule.Match)
+		lower_desc = strings.ToLower(rule.Description)
 
 		// Check if lower_match starts with lower_input
 		// both strings are lowered to ignore case
 		// if input is an empty string, it will always match
-		if strings.HasPrefix(lower_match, lower_input) {
+		if strings.HasPrefix(lower_match, lower_input) || strings.Contains(lower_desc, lower_input) {
 			result = append(result, rule)
 		}
 	}
