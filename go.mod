@@ -1,4 +1,4 @@
-module launcher
+module github.com/xefiry/launcher
 
 go 1.23.2
 
