@@ -70,8 +70,8 @@ def get_file_list() -> list[str]:
 # build
 run(["go", "build", "-ldflags", "-H=windowsgui -w -s"])
 
-# get version number
-tag = run(["git", "tag"])
+# get version number from tag
+tag = run(["git", "describe", "--tags"])
 
 # create the archive
 with ZipFile(f"{NAME}_{tag}_{ARCH}.zip", "w") as myzip:
