@@ -73,7 +73,6 @@ These rules will use regular expressions. Not implemented yet.
 List of ideas to implement in no particular order
 
 - Config/GUI: Replace some GUI constants with configuration (font, font size, width, colours, ...)
-- Misc: Generate a log file to be able to read errors with console disabled
 - GUI: Improve selection colours and controls
 - GUI: Add colour in matching result : when Typing "Test", colour in red the "Test" in every rule that matches
 - Rule: Manage environment variables in rule Exe/Args
