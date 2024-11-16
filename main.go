@@ -6,7 +6,7 @@ import (
 
 const (
 	APP_TITLE   = "The Launcher"
-	APP_VERSION = "v0.1"
+	APP_VERSION = "v0.2"
 	CONFIG_FILE = "config.toml"
 )
 
