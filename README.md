@@ -76,7 +76,6 @@ List of ideas to implement in no particular order
 - Misc: Generate a log file to be able to read errors with console disabled
 - GUI: Improve selection colours and controls
 - GUI: Add colour in matching result : when Typing "Test", colour in red the "Test" in every rule that matches
-- Rule: Allow the search by Description, not only by Match
 - Rule: Manage environment variables in rule Exe/Args
 - GUI: Ctrl + Z / Ctrl + Shift + Z to undo/redo
 - Rule: Add regexp management in rules
