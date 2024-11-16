@@ -17,7 +17,7 @@ func GUI_Start(rules []*Rule) {
 		FONT_SIZE_TITLE = FONT_SIZE * 3
 		NB_LINES_MAX    = 10
 		WINDOW_WIDTH    = 600
-		WINDOW_HEIGHT   = (2+NB_LINES_MAX)*FONT_SIZE + FONT_SIZE_TITLE
+		WINDOW_HEIGHT   = FONT_SIZE_TITLE + 2*FONT_SIZE + NB_LINES_MAX*FONT_SIZE
 	)
 
 	var (
@@ -206,10 +206,10 @@ func GUI_Start(rules []*Rule) {
 		rl.DrawRectangleRec(rect_main, color_main)
 
 		// Text input area coord (with margins each side)
-		rect_text = rl.NewRectangle(10, rect_main.Y+(FONT_SIZE/2), rect_main.Width-20, FONT_SIZE)
+		rect_text = rl.NewRectangle(10, rect_main.Y, rect_main.Width-20, FONT_SIZE*1.5)
 		coord_text = coord_main
 		coord_text.X += 10
-		coord_text.Y = rect_text.Y
+		coord_text.Y = rect_text.Y + FONT_SIZE/3
 		if len(input_text) == 0 {
 			tmp_text = "Enter text here ..."
 			tmp_color = color_font_inactive
