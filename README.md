@@ -3,7 +3,7 @@
 
 A fast configurable launcher
 
-![screenshot](screenshot.png)
+![screenshot](Images/screenshot_v1.0.png)
 
 Status: in development (expect breaking changes)
 
@@ -77,7 +77,6 @@ List of ideas to implement in no particular order
 - GUI: Improve selection colours and controls
 - GUI: Add colour in matching result : when Typing "Test", colour in red the "Test" in every rule that matches
 - Rule: Allow the search by Description, not only by Match
-- GUI: Set transparent background and "adjust" size of list that is displayed (no empty list shown)
 - Rule: Manage environment variables in rule Exe/Args
 - GUI: Ctrl + Z / Ctrl + Shift + Z to undo/redo
 - Rule: Add regexp management in rules
@@ -89,3 +88,4 @@ List of ideas to implement in no particular order
 - Commands: Add /reset - reset all LastUse values
 - Misc: Refactor GUI_Start function (Create a GUI class with methods) ?
 - Misc: If config.toml is not found, create it with a few examples dummy rules
+- ~~GUI: Set transparent background and "adjust" size of list that is displayed (no empty list shown)~~ -> background transparency messes with font
