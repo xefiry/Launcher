@@ -1,11 +1,80 @@
 package main
 
 import (
+	"fmt"
 	"reflect"
 	"sort"
+	"strings"
 	"testing"
 	"time"
 )
+
+func TestRuleGetDisplayStrings(t *testing.T) {
+	rules := []*Rule{
+		// regular case
+		{"Demo rule", "Description", "dummy.exe", nil, time.Unix(0, 0)},
+
+		// edge case (regexp metacharacters)
+		{"Edge rule", "{}[]()^$.|*+?", "dummy.exe", nil, time.Unix(0, 0)},
+	}
+
+	var tests = []struct {
+		name  string
+		rule  *Rule
+		input string
+		want  []string
+	}{
+		{"empty", rules[0], "", []string{"", "Demo rule - Description"}},
+		{"match 1", rules[0], "demo", []string{"Demo", " rule - Description"}},
+		{"match 2", rules[0], "Demo ", []string{"Demo ", "rule - Description"}},
+		{"match 3", rules[0], "Demo rule", []string{"Demo rule", " - Description"}},
+		{"desc 1", rules[0], "Des", []string{"", "Demo rule - ", "Des", "cription"}},
+		{"desc 2", rules[0], "crip", []string{"", "Demo rule - Des", "crip", "tion"}},
+		{"desc 3", rules[0], "tion", []string{"", "Demo rule - Descrip", "tion"}},
+		{"desc 4", rules[0], "Description", []string{"", "Demo rule - ", "Description"}},
+		{"both 1", rules[0], "De", []string{"De", "mo rule - ", "De", "scription"}},
+
+		{"edge 0", rules[1], "XXX", []string{"", "Edge rule - {}[]()^$.|*+?"}},
+		{"edge 1", rules[1], "{", []string{"", "Edge rule - ", "{", "}[]()^$.|*+?"}},
+		{"edge 2", rules[1], "}", []string{"", "Edge rule - {", "}", "[]()^$.|*+?"}},
+		{"edge 3", rules[1], "[", []string{"", "Edge rule - {}", "[", "]()^$.|*+?"}},
+		{"edge 4", rules[1], "]", []string{"", "Edge rule - {}[", "]", "()^$.|*+?"}},
+		{"edge 5", rules[1], "(", []string{"", "Edge rule - {}[]", "(", ")^$.|*+?"}},
+		{"edge 6", rules[1], ")", []string{"", "Edge rule - {}[](", ")", "^$.|*+?"}},
+		{"edge 7", rules[1], "^", []string{"", "Edge rule - {}[]()", "^", "$.|*+?"}},
+		{"edge 8", rules[1], "$", []string{"", "Edge rule - {}[]()^", "$", ".|*+?"}},
+		{"edge 9", rules[1], ".", []string{"", "Edge rule - {}[]()^$", ".", "|*+?"}},
+		{"edge 10", rules[1], "|", []string{"", "Edge rule - {}[]()^$.", "|", "*+?"}},
+		{"edge 11", rules[1], "*", []string{"", "Edge rule - {}[]()^$.|", "*", "+?"}},
+		{"edge 12", rules[1], "+", []string{"", "Edge rule - {}[]()^$.|*", "+", "?"}},
+		{"edge 13", rules[1], "?", []string{"", "Edge rule - {}[]()^$.|*+", "?"}},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			// test the function
+			ans := tt.rule.GetDisplayStrings(tt.input)
+
+			// compare result length
+			if len(ans) != len(tt.want) {
+				t.Errorf("got %d, want %d", len(ans), len(tt.want))
+			}
+
+			// deep compare (only if expected result is not empty)
+			if len(tt.want) != 0 && !reflect.DeepEqual(ans, tt.want) {
+				t.Errorf("got %v, want %v", ans, tt.want)
+			}
+
+			// check that the split does not modify the values
+			join_ans := strings.Join(ans, "")
+			join_rule := fmt.Sprintf("%v - %v", tt.rule.Match, tt.rule.Description)
+
+			if join_ans != join_rule {
+				t.Errorf("got '%v', want '%v'", join_ans, join_rule)
+			}
+		})
+	}
+}
 
 // Tests if []Rule obtained through Filter gives a reference of a rule
 // Changing the obtained rule should change the original one.

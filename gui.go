@@ -26,6 +26,7 @@ func GUI_Start(rules []*Rule) {
 		color_box           = rl.DarkGray
 		color_text_area     = rl.RayWhite
 		color_font_active   = rl.Black
+		color_font_match    = rl.Red
 		color_font_inactive = rl.Beige
 		color_row_even      = rl.LightGray
 		color_row_odd       = rl.Gray
@@ -240,10 +241,20 @@ func GUI_Start(rules []*Rule) {
 				tmp_color = color_row_odd
 			}
 			r := rules_filtered[i]
-			tmp_text = fmt.Sprintf("%v - %v", r.Match, r.Description)
 
 			rl.DrawRectangleRec(rect_main, tmp_color)
-			rl.DrawTextEx(font_text, tmp_text, coord_main, FONT_SIZE, 0, color_font_active)
+
+			coord_text = coord_main
+			for j, tmp_text := range r.GetDisplayStrings(input_text) {
+				switch j % 2 {
+				case 0:
+					tmp_color = color_font_match
+				case 1:
+					tmp_color = color_font_active
+				}
+				rl.DrawTextEx(font_text, tmp_text, coord_text, FONT_SIZE, 0, tmp_color)
+				coord_text.X += rl.MeasureTextEx(font_text, tmp_text, FONT_SIZE, 0).X
+			}
 
 			// Increase Y for next usages
 			coord_main.Y += rect_main.Height

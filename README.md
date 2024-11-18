@@ -72,13 +72,13 @@ These rules will use regular expressions. Not implemented yet.
 
 List of ideas to implement in no particular order
 
+- Config: Add configuration to enable search by rule description
 - Config/GUI: Replace some GUI constants with configuration (font, font size, width, colours, ...)
 - GUI: Improve selection colours and controls
-- GUI: Add colour in matching result : when Typing "Test", colour in red the "Test" in every rule that matches
 - Rule: Manage environment variables in rule Exe/Args
 - GUI: Ctrl + Z / Ctrl + Shift + Z to undo/redo
 - Rule: Add regexp management in rules
-- GUI: Ctrl + V to paste text (use <https://pkg.go.dev/github.com/atotto/clipboard>)
+- GUI: Ctrl + V to paste text (use rl.GetClipboardText)
 - Misc: Comment the code some more
 - Commands: Add standard commands
 - Commands: Add /config - edit configuration file
@@ -86,4 +86,3 @@ List of ideas to implement in no particular order
 - Commands: Add /reset - reset all LastUse values
 - Misc: Refactor GUI_Start function (Create a GUI class with methods) ?
 - Misc: If config.toml is not found, create it with a few examples dummy rules
-- ~~GUI: Set transparent background and "adjust" size of list that is displayed (no empty list shown)~~ -> background transparency messes with font
