@@ -49,6 +49,7 @@ func GUI_Start(rules []*Rule) {
 		// Elements
 		input_text         string = ""
 		rules_filtered     []*Rule
+		strings_filtered   [][]string
 		rules_needs_filter bool = true
 		active_element     int  = -1 // -1 = typing field, 0 to n = element in list
 		nb_displayed_rules int  = 0
@@ -130,6 +131,12 @@ func GUI_Start(rules []*Rule) {
 
 			// reset the active element
 			active_element = -1
+
+			// redo the list of display strings
+			strings_filtered = [][]string{}
+			for i := 0; i < nb_displayed_rules; i++ {
+				strings_filtered = append(strings_filtered, rules_filtered[i].GetDisplayStrings(input_text))
+			}
 		}
 
 		// Manage navigation
@@ -232,7 +239,7 @@ func GUI_Start(rules []*Rule) {
 		rect_main.Y += rect_main.Height
 
 		rect_main.Height = FONT_SIZE
-		for i := 0; i < nb_displayed_rules; i++ {
+		for i, texts := range strings_filtered {
 			if i == active_element {
 				tmp_color = color_selected
 			} else if i%2 == 0 {
@@ -240,12 +247,11 @@ func GUI_Start(rules []*Rule) {
 			} else {
 				tmp_color = color_row_odd
 			}
-			r := rules_filtered[i]
 
 			rl.DrawRectangleRec(rect_main, tmp_color)
 
 			coord_text = coord_main
-			for j, tmp_text := range r.GetDisplayStrings(input_text) {
+			for j, tmp_text := range texts {
 				switch j % 2 {
 				case 0:
 					tmp_color = color_font_match
