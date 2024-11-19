@@ -3,7 +3,7 @@
 
 A fast configurable launcher
 
-![screenshot](Images/screenshot_v0.2.png)
+![screenshot](Images/screenshot_v0.3.png)
 
 Status: in development (expect breaking changes)
 
