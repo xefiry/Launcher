@@ -8,19 +8,17 @@ import (
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
-func GUI_Start(rules []*Rule) {
+func GUI_Start(config *Config) {
 	const (
-		TARGET_FPS      = 60
-		FONT            = "Fonts/CascadiaCode-SemiLight.ttf"
-		FONT_TITLE      = "Fonts/CascadiaCode-SemiBold.ttf"
-		FONT_SIZE       = 22 // Used for font and elements size.
-		FONT_SIZE_TITLE = FONT_SIZE * 3
-		NB_LINES_MAX    = 10
-		WINDOW_WIDTH    = 600
-		WINDOW_HEIGHT   = FONT_SIZE_TITLE + 2*FONT_SIZE + NB_LINES_MAX*FONT_SIZE
+		TARGET_FPS   = 60
+		WINDOW_WIDTH = 600
 	)
 
 	var (
+		WINDOW_HEIGHT = config.UI.TitleFontSize +
+			2*config.UI.MainFontSize +
+			config.Search.MaxResults*config.UI.MainFontSize
+
 		// Colors
 		color_main          = rl.SkyBlue
 		color_box           = rl.DarkGray
@@ -72,8 +70,8 @@ func GUI_Start(rules []*Rule) {
 
 	// Load fonts with right size to avoid blurry text
 	// See https://github.com/raysan5/raylib/wiki/Frequently-Asked-Questions#why-is-my-font-blurry
-	font_text = rl.LoadFontEx(FONT, FONT_SIZE, nil, 0)
-	font_title = rl.LoadFontEx(FONT_TITLE, FONT_SIZE_TITLE, nil, 0)
+	font_text = rl.LoadFontEx(config.UI.MainFontFile, config.UI.MainFontSize, nil, 0)
+	font_title = rl.LoadFontEx(config.UI.TitleFontFile, config.UI.TitleFontSize, nil, 0)
 
 	// Defer the unloading
 	defer rl.UnloadFont(font_text)
@@ -121,13 +119,13 @@ func GUI_Start(rules []*Rule) {
 
 		// Get filtered rules (only if it needs to)
 		if rules_needs_filter {
-			rules_filtered = FilterRules(rules, input_text)
+			rules_filtered = FilterRules(config.Rules, input_text)
 			SortRules(rules_filtered)
 			rules_needs_filter = false
 
 			// update number of rules to display
 			// the number of rules in the list, if it does not exceed the max number of lines to display
-			nb_displayed_rules = min(len(rules_filtered), NB_LINES_MAX)
+			nb_displayed_rules = min(len(rules_filtered), int(config.Search.MaxResults))
 
 			// reset the active element
 			active_element = -1
@@ -193,31 +191,31 @@ func GUI_Start(rules []*Rule) {
 		rl.ClearBackground(rl.RayWhite)
 
 		coord_main = rl.NewVector2(10, 0)
-		rect_main = rl.NewRectangle(0, 0, WINDOW_WIDTH, FONT_SIZE_TITLE)
+		rect_main = rl.NewRectangle(0, 0, WINDOW_WIDTH, float32(config.UI.TitleFontSize))
 
 		// Title with background
 		rl.DrawRectangleRec(rect_main, color_main)
-		rl.DrawTextEx(font_title, APP_TITLE, coord_main, FONT_SIZE_TITLE, 0, color_font_active)
+		rl.DrawTextEx(font_title, APP_TITLE, coord_main, float32(config.UI.TitleFontSize), 0, color_font_active)
 
 		// Add version number next to the title
 		coord_text = coord_main
-		coord_text.X += rl.MeasureTextEx(font_title, APP_TITLE, FONT_SIZE_TITLE, 0).X + 20 // Title width + some margin
-		coord_text.Y += FONT_SIZE_TITLE / 2                                                // half the height of the title
-		rl.DrawTextEx(font_text, APP_VERSION, coord_text, FONT_SIZE, 0, color_font_active)
+		coord_text.X += rl.MeasureTextEx(font_title, APP_TITLE, float32(config.UI.TitleFontSize), 0).X + 20 // Title width + some margin
+		coord_text.Y += float32(config.UI.TitleFontSize) / 2                                                // half the height of the title
+		rl.DrawTextEx(font_text, APP_VERSION, coord_text, float32(config.UI.MainFontSize), 0, color_font_active)
 
 		// Increase Y for next usages
 		coord_main.Y += rect_main.Height
 		rect_main.Y += rect_main.Height
 
 		// Text input area background
-		rect_main.Height = FONT_SIZE * 2
+		rect_main.Height = float32(config.UI.MainFontSize) * 2
 		rl.DrawRectangleRec(rect_main, color_main)
 
 		// Text input area coord (with margins each side)
-		rect_text = rl.NewRectangle(10, rect_main.Y, rect_main.Width-20, FONT_SIZE*1.5)
+		rect_text = rl.NewRectangle(10, rect_main.Y, rect_main.Width-20, float32(config.UI.MainFontSize)*1.5)
 		coord_text = coord_main
 		coord_text.X += 10
-		coord_text.Y = rect_text.Y + FONT_SIZE/3
+		coord_text.Y = rect_text.Y + float32(config.UI.MainFontSize)/3
 		if len(input_text) == 0 {
 			tmp_text = "Enter text here ..."
 			tmp_color = color_font_inactive
@@ -232,13 +230,13 @@ func GUI_Start(rules []*Rule) {
 
 		rl.DrawRectangleRec(rect_text, color_text_area)
 		rl.DrawRectangleLinesEx(rect_text, 2, color_box)
-		rl.DrawTextEx(font_text, tmp_text, coord_text, FONT_SIZE, 0, tmp_color)
+		rl.DrawTextEx(font_text, tmp_text, coord_text, float32(config.UI.MainFontSize), 0, tmp_color)
 
 		// Increase Y for next usages
 		coord_main.Y += rect_main.Height
 		rect_main.Y += rect_main.Height
 
-		rect_main.Height = FONT_SIZE
+		rect_main.Height = float32(config.UI.MainFontSize)
 		for i, texts := range strings_filtered {
 			if i == active_element {
 				tmp_color = color_selected
@@ -258,8 +256,8 @@ func GUI_Start(rules []*Rule) {
 				case 1:
 					tmp_color = color_font_active
 				}
-				rl.DrawTextEx(font_text, tmp_text, coord_text, FONT_SIZE, 0, tmp_color)
-				coord_text.X += rl.MeasureTextEx(font_text, tmp_text, FONT_SIZE, 0).X
+				rl.DrawTextEx(font_text, tmp_text, coord_text, float32(config.UI.MainFontSize), 0, tmp_color)
+				coord_text.X += rl.MeasureTextEx(font_text, tmp_text, float32(config.UI.MainFontSize), 0).X
 			}
 
 			// Increase Y for next usages
@@ -268,7 +266,7 @@ func GUI_Start(rules []*Rule) {
 		}
 
 		// Outline rect
-		rect_text = rl.NewRectangle(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT)
+		rect_text = rl.NewRectangle(0, 0, WINDOW_WIDTH, float32(WINDOW_HEIGHT))
 		rl.DrawRectangleLinesEx(rect_text, 2, color_box)
 
 		rl.EndDrawing()

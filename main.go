@@ -7,7 +7,7 @@ import (
 
 const (
 	APP_TITLE   = "The Launcher"
-	APP_VERSION = "v0.2"
+	APP_VERSION = "v0.3"
 	CONFIG_FILE = "config.toml"
 	LOG_FILE    = "launcher.log"
 )
@@ -33,5 +33,5 @@ func main() {
 	// make sure to write it back at the end
 	defer config.Write(CONFIG_FILE)
 
-	GUI_Start(config.Rules)
+	GUI_Start(config)
 }

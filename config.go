@@ -11,6 +11,15 @@ import (
 )
 
 type Config struct {
+	Search struct {
+		MaxResults int32
+	}
+	UI struct {
+		TitleFontFile string
+		TitleFontSize int32
+		MainFontFile  string
+		MainFontSize  int32
+	}
 	Rules []*Rule
 }
 
@@ -53,6 +62,23 @@ func NewConfig(filepath string) (*Config, error) {
 		if rule.LastUse == undefined_time {
 			rule.LastUse = time.Unix(0, 0)
 		}
+	}
+
+	// Check some variables, if missing set to a default value
+	if config.Search.MaxResults == 0 {
+		config.Search.MaxResults = 10
+	}
+	if config.UI.TitleFontFile == "" {
+		config.UI.TitleFontFile = "Fonts/CascadiaCode-SemiBold.ttf"
+	}
+	if config.UI.TitleFontSize == 0 {
+		config.UI.TitleFontSize = 66
+	}
+	if config.UI.MainFontFile == "" {
+		config.UI.MainFontFile = "Fonts/CascadiaCode-SemiLight.ttf"
+	}
+	if config.UI.MainFontSize == 0 {
+		config.UI.MainFontSize = 22
 	}
 
 	return &config, nil

@@ -1,3 +1,12 @@
+[Search]
+  MaxResults = 10
+
+[UI]
+  TitleFontFile = "Fonts/CascadiaCode-SemiBold.ttf"
+  TitleFontSize = 66
+  MainFontFile = "Fonts/CascadiaCode-SemiLight.ttf"
+  MainFontSize = 22
+
 [[Rules]]
   Match = "C"
   Description = "Open C:\\"
