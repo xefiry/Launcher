@@ -53,7 +53,7 @@ func TestRuleGetDisplayStrings(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			// test the function
-			ans := tt.rule.GetDisplayStrings(tt.input)
+			ans := tt.rule.GetDisplayStrings(tt.input, true)
 
 			// compare result length
 			if len(ans) != len(tt.want) {
@@ -88,7 +88,7 @@ func TestRuleFilterNoCopy(t *testing.T) {
 	SortRules(rules1)
 
 	// Get a rule by filtering
-	rules2 := FilterRules(rules1, "")
+	rules2 := FilterRules(rules1, "", true)
 
 	// Modify a field of the rule in the filtered list
 	rules2[0].Description = "Modified"
@@ -137,7 +137,7 @@ func TestRuleFilter(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			// test the function
-			ans := FilterRules(rules, tt.input)
+			ans := FilterRules(rules, tt.input, true)
 
 			// compare result length
 			if len(ans) != len(tt.want) {
