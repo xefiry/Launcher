@@ -51,7 +51,7 @@ func (r *Rule) Check() error {
 // where any odd index contains a string that matched with input
 // and any even index a string that did not.
 // Example : ["match", "not match", "match"]
-func (r *Rule) GetDisplayStrings(input string) []string {
+func (r *Rule) GetDisplayStrings(input string, search_desc bool) []string {
 	result := []string{}
 	var tmp string
 
@@ -70,7 +70,6 @@ func (r *Rule) GetDisplayStrings(input string) []string {
 	re_desc := regexp.MustCompile(rule_desc)
 
 	res_match := re_match.FindStringSubmatch(r.Match)
-	res_desc := re_desc.FindStringSubmatch(r.Description)
 
 	if len(res_match) == 0 {
 		// if there is no match in the Match part of the rule
@@ -96,35 +95,43 @@ func (r *Rule) GetDisplayStrings(input string) []string {
 	// Add the separator to the tmp string
 	tmp += " - "
 
-	if len(res_desc) == 0 {
-		// if there is no match in the Description part of the rule
+	// If description search is enabled, search in it
+	if search_desc {
+		res_desc := re_desc.FindStringSubmatch(r.Description)
 
-		// insert an the whole description with the tmp string
-		result = append(result, tmp+r.Description)
+		if len(res_desc) == 0 {
+			// if there is no match in the Description part of the rule
 
-	} else if len(res_desc) == 4 {
-		// if there is a match, there should be 4 elements
+			// insert an the whole description with the tmp string
+			result = append(result, tmp+r.Description)
 
-		// insert the first element (not matched) with the tmp string
-		result = append(result, tmp+res_desc[1])
+		} else if len(res_desc) == 4 {
+			// if there is a match, there should be 4 elements
 
-		// then insert the part that matched
-		result = append(result, res_desc[2])
+			// insert the first element (not matched) with the tmp string
+			result = append(result, tmp+res_desc[1])
 
-		// finaly the remaining part that did not match (only if it is not empty)
-		if len(res_desc[3]) > 0 {
-			result = append(result, res_desc[3])
+			// then insert the part that matched
+			result = append(result, res_desc[2])
+
+			// finaly the remaining part that did not match (only if it is not empty)
+			if len(res_desc[3]) > 0 {
+				result = append(result, res_desc[3])
+			}
+
+		} else {
+			// this should not happen ... panic
+			log.Panicf("error while parsing Match of rule %v", r)
 		}
-
 	} else {
-		// this should not happen ... panic
-		log.Panicf("error while parsing Match of rule %v", r)
+		// otherwise, just put the description in the result
+		result = append(result, tmp+r.Description)
 	}
 
 	return result
 }
 
-func FilterRules(rules []*Rule, input string) []*Rule {
+func FilterRules(rules []*Rule, input string, search_desc bool) []*Rule {
 	var result []*Rule
 
 	lower_input := strings.ToLower(input)
@@ -138,7 +145,8 @@ func FilterRules(rules []*Rule, input string) []*Rule {
 		// Check if lower_match starts with lower_input
 		// both strings are lowered to ignore case
 		// if input is an empty string, it will always match
-		if strings.HasPrefix(lower_match, lower_input) || strings.Contains(lower_desc, lower_input) {
+		if strings.HasPrefix(lower_match, lower_input) ||
+			(strings.Contains(lower_desc, lower_input) && search_desc) {
 			result = append(result, rule)
 		}
 	}

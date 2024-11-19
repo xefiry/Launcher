@@ -72,8 +72,7 @@ These rules will use regular expressions. Not implemented yet.
 
 List of ideas to implement in no particular order
 
-- Config: Add configuration to enable search by rule description
-- Config/GUI: Replace some GUI constants with configuration (font, font size, width, colours, ...)
+- Misc: Simplify Rule.GetDisplayStrings
 - GUI: Improve selection colours and controls
 - Rule: Manage environment variables in rule Exe/Args
 - GUI: Ctrl + Z / Ctrl + Shift + Z to undo/redo

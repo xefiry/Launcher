@@ -1,4 +1,5 @@
 [Search]
+  SearchDescription = false
   MaxResults = 10
 
 [UI]

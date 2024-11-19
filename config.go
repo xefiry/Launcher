@@ -12,7 +12,8 @@ import (
 
 type Config struct {
 	Search struct {
-		MaxResults int32
+		SearchDescription bool
+		MaxResults        int32
 	}
 	UI struct {
 		TitleFontFile string

@@ -119,7 +119,7 @@ func GUI_Start(config *Config) {
 
 		// Get filtered rules (only if it needs to)
 		if rules_needs_filter {
-			rules_filtered = FilterRules(config.Rules, input_text)
+			rules_filtered = FilterRules(config.Rules, input_text, config.Search.SearchDescription)
 			SortRules(rules_filtered)
 			rules_needs_filter = false
 
@@ -133,7 +133,8 @@ func GUI_Start(config *Config) {
 			// redo the list of display strings
 			strings_filtered = [][]string{}
 			for i := 0; i < nb_displayed_rules; i++ {
-				strings_filtered = append(strings_filtered, rules_filtered[i].GetDisplayStrings(input_text))
+				tmp := rules_filtered[i].GetDisplayStrings(input_text, config.Search.SearchDescription)
+				strings_filtered = append(strings_filtered, tmp)
 			}
 		}
 
