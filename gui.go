@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"strings"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
@@ -70,8 +69,9 @@ func GUI_Start(config *Config) {
 
 	// Load fonts with right size to avoid blurry text
 	// See https://github.com/raysan5/raylib/wiki/Frequently-Asked-Questions#why-is-my-font-blurry
-	font_text = rl.LoadFontEx(config.UI.MainFontFile, config.UI.MainFontSize, nil, 0)
-	font_title = rl.LoadFontEx(config.UI.TitleFontFile, config.UI.TitleFontSize, nil, 0)
+	// Note: I put 256 in last param to make accentuated characters work ... but I don't know why it works
+	font_text = rl.LoadFontEx(config.UI.MainFontFile, config.UI.MainFontSize, nil, 256)
+	font_title = rl.LoadFontEx(config.UI.TitleFontFile, config.UI.TitleFontSize, nil, 256)
 
 	// Defer the unloading
 	defer rl.UnloadFont(font_text)
@@ -87,14 +87,9 @@ func GUI_Start(config *Config) {
 		if key := rl.GetCharPressed(); key != 0 {
 			input_char := string(key)
 
-			// convert the input char to a byte array and check it's length
-			// if it is 1, add the character to input, else ignore it
-			if len([]byte(input_char)) == 1 {
-				input_text += input_char
-				rules_needs_filter = true
-			} else {
-				log.Println("Ignored character : ", input_char)
-			}
+			// add the character to input
+			input_text += input_char
+			rules_needs_filter = true
 		}
 
 		// Manage deleting text
@@ -112,7 +107,15 @@ func GUI_Start(config *Config) {
 				}
 			} else {
 				// delete last character
-				input_text = input_text[:len(input_text)-1]
+
+				// convert string to rune list
+				tmp := []rune(input_text)
+
+				// remove the last rune
+				tmp = tmp[:len(tmp)-1]
+
+				// put back into input_text as string
+				input_text = string(tmp)
 			}
 			rules_needs_filter = true
 		}

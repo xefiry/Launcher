@@ -42,3 +42,8 @@
   Match = "ex_noargs"
   Description = "Example rule (no args)"
   Exe = "dummy.exe"
+
+[[Rules]]
+  Match = "accents"
+  Description = "àâä éèêë ìîï òôö ùûü ÿ"
+  Exe = "dummy.exe"
