@@ -49,7 +49,9 @@ func GUI_Start(config *Config) {
 		strings_filtered   [][]string
 		rules_needs_filter bool = true
 		active_element     int  = -1 // -1 = typing field, 0 to n = element in list
-		nb_displayed_rules int  = 0
+		nb_rules           int
+		first_display_rule int
+		last_display_rule  int
 
 		// Misc.
 		is_running bool = true
@@ -124,47 +126,84 @@ func GUI_Start(config *Config) {
 		if rules_needs_filter {
 			rules_filtered = FilterRules(config.Rules, input_text, config.Search.SearchDescription)
 			SortRules(rules_filtered)
-			rules_needs_filter = false
 
-			// update number of rules to display
-			// the number of rules in the list, if it does not exceed the max number of lines to display
-			nb_displayed_rules = min(len(rules_filtered), int(config.Search.MaxResults))
+			// update number of rules$
+			nb_rules = len(rules_filtered)
 
 			// reset the active element
 			active_element = -1
 
 			// redo the list of display strings
 			strings_filtered = [][]string{}
-			for i := 0; i < nb_displayed_rules; i++ {
+			for i := 0; i < nb_rules; i++ {
 				tmp := rules_filtered[i].GetDisplayStrings(input_text, config.Search.SearchDescription)
 				strings_filtered = append(strings_filtered, tmp)
 			}
+
+			// mark as filtered
+			rules_needs_filter = false
+
+			first_display_rule = 0
+
+			// The last rule to display is the minimum between the last rule in the list
+			// and the first rule to display + the number of rules to display
+			// -1 to get the id of the last rule to display
+			last_display_rule = min(nb_rules, first_display_rule+int(config.Search.MaxResults)) - 1
 		}
 
 		// Manage navigation
 		if rl.IsKeyPressed(rl.KeyUp) {
-			if active_element > -1 {
+			if active_element > 0 {
 				active_element--
+
+				// if we are not on the first element of the list
+				// and we are on the first element displayed
+				if active_element > 0 && active_element == first_display_rule {
+					// we increase the first rule displayed
+					first_display_rule--
+
+					// the last is the first + the number of rules to display, or the number of rules in the list (if not enough)
+					last_display_rule = min(first_display_rule+int(config.Search.MaxResults), nb_rules) - 1
+				}
 			}
 		}
+
 		if rl.IsKeyPressed(rl.KeyDown) {
-			if active_element < nb_displayed_rules-1 {
+			if active_element < nb_rules-1 {
 				active_element++
+
+				// if we are not on the last element of the list
+				// and we are on the last element displayed
+				if active_element < nb_rules-1 && active_element == last_display_rule {
+					// we increase the first rule displayed
+					first_display_rule++
+
+					// the last is the first + the number of rules to display, or the number of rules in the list (if not enough)
+					last_display_rule = min(first_display_rule+int(config.Search.MaxResults), nb_rules) - 1
+				}
 			}
 		}
+
 		if rl.IsKeyPressed(rl.KeyHome) {
-			// if we are already on the first rule, or if there are no rules
-			if active_element == 0 || len(rules_filtered) == 0 {
-				// we make the text field as active
-				active_element = -1
-			} else {
-				// otherwise, we make the first rule active
-				active_element = 0
-			}
+			active_element = 0
+
+			// reset the first rule to display as the first rule of the list
+			first_display_rule = 0
+			// the last is the first + the number of rules to display, or the number of rules in the list (if not enough)
+			last_display_rule = min(first_display_rule+int(config.Search.MaxResults), nb_rules) - 1
 		}
+
 		if rl.IsKeyPressed(rl.KeyEnd) {
 			// if there are no rules, it will be active_element = 0 - 1 = -1
-			active_element = nb_displayed_rules - 1
+			active_element = nb_rules - 1
+
+			// the last rule to display becomes the last rule
+			last_display_rule = nb_rules - 1
+
+			// and the first is last - nb of displayed rules, but cannot be negative
+			first_display_rule = max(0, last_display_rule-int(config.Search.MaxResults)+1)
+
+			fmt.Printf("%v [%v:%v]\n\n", active_element, first_display_rule, last_display_rule) // Debug -> ok
 		}
 
 		// Validation
@@ -172,7 +211,7 @@ func GUI_Start(config *Config) {
 			var nb_exec int
 
 			// Only execute if there is at least a rule displayed
-			if len(rules_filtered) > 0 {
+			if nb_rules > 0 {
 				// If no rule is selected, use the first one
 				if active_element == -1 {
 					nb_exec = 0
@@ -224,12 +263,8 @@ func GUI_Start(config *Config) {
 			tmp_text = "Enter text here ..."
 			tmp_color = color_font_inactive
 		} else {
-			tmp_text = fmt.Sprintf("%v|", input_text)
-			if active_element == -1 {
-				tmp_color = color_font_active
-			} else {
-				tmp_color = color_font_inactive
-			}
+			tmp_text = input_text
+			tmp_color = color_font_active
 		}
 
 		rl.DrawRectangleRec(rect_text, color_text_area)
@@ -241,7 +276,8 @@ func GUI_Start(config *Config) {
 		rect_main.Y += rect_main.Height
 
 		rect_main.Height = float32(config.UI.MainFontSize)
-		for i, texts := range strings_filtered {
+		for i, texts := range strings_filtered[first_display_rule : last_display_rule+1] {
+			i += first_display_rule
 			if i == active_element {
 				tmp_color = color_selected
 			} else if i%2 == 0 {
