@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"strings"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
@@ -30,10 +29,11 @@ func GUI_Start(config *Config) {
 		color_selected      = rl.Green
 
 		// Coordinates
-		coord_main rl.Vector2
-		coord_text rl.Vector2
-		rect_main  rl.Rectangle
-		rect_text  rl.Rectangle
+		coord_main  rl.Vector2
+		coord_text  rl.Vector2
+		rect_main   rl.Rectangle
+		rect_text   rl.Rectangle
+		rect_scroll rl.Rectangle
 
 		// Working vars
 		tmp_color rl.Color
@@ -202,8 +202,6 @@ func GUI_Start(config *Config) {
 
 			// and the first is last - nb of displayed rules, but cannot be negative
 			first_display_rule = max(0, last_display_rule-int(config.Search.MaxResults)+1)
-
-			fmt.Printf("%v [%v:%v]\n\n", active_element, first_display_rule, last_display_rule) // Debug -> ok
 		}
 
 		// Validation
@@ -274,6 +272,33 @@ func GUI_Start(config *Config) {
 		// Increase Y for next usages
 		coord_main.Y += rect_main.Height
 		rect_main.Y += rect_main.Height
+
+		// Scroll bar management
+		if nb_rules > int(config.Search.MaxResults) {
+			// reduce the size of the background for rules to leave space for the scrolling bar
+			rect_main.Width -= float32(config.UI.MainFontSize)
+
+			// height of the whole scroll bar space
+			height := float32(config.UI.MainFontSize * config.Search.MaxResults)
+
+			// height of the actual bar, proportionnal with the number of rules in the list
+			bar_height := height * float32(config.Search.MaxResults) / float32(nb_rules)
+
+			// calculate the space the bar can move
+			vertical_space := height - bar_height
+
+			// calculate the first rule displayed when at the bottom of the rules
+			bottom := nb_rules - int(config.Search.MaxResults)
+
+			// calculate the vertical offset for the scroll bar
+			//              start position + availlable space for the bar to move proportioned
+			vertical_offset := rect_main.Y + vertical_space*float32(first_display_rule)/float32(bottom)
+
+			// create the scrolling bar to fill the left side
+			rect_scroll = rl.NewRectangle(rect_main.Width, vertical_offset, float32(config.UI.MainFontSize), bar_height)
+
+			rl.DrawRectangleRounded(rect_scroll, float32(config.UI.MainFontSize/2), 5, color_box)
+		}
 
 		rect_main.Height = float32(config.UI.MainFontSize)
 		for i, texts := range strings_filtered[first_display_rule : last_display_rule+1] {
