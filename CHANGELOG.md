@@ -1,9 +1,9 @@
 # Changelog
 
-## Upcoming
+## v0.4
 
 - GUI: Added accentuated characters management
-- GUI: Improved rules navigation when number of rules is more than the number of max displayed rules
+- GUI: Added scrolling in rules
 
 ## v0.3
 
