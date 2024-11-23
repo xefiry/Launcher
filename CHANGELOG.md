@@ -1,5 +1,9 @@
 # Changelog
 
+## Upcoming
+
+- GUI: Improving looks
+
 ## v0.4
 
 - GUI: Added accentuated characters management

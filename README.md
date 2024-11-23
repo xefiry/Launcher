@@ -72,8 +72,9 @@ These rules will use regular expressions. Not implemented yet.
 
 List of ideas to implement in no particular order
 
+- Config/GUI: Add configuration for colours (use Hex colors rl.GetColor(0x007F00FF))
 - Misc: Simplify Rule.GetDisplayStrings
-- GUI: Improve selection colours and controls
+- GUI: Improve selection colours
 - Rule: Manage environment variables in rule Exe/Args
 - GUI: Ctrl + Z / Ctrl + Shift + Z to undo/redo
 - Rule: Add regexp management in rules

@@ -17,6 +17,10 @@ func GUI_Start(config *Config) {
 			2*config.UI.MainFontSize +
 			config.Search.MaxResults*config.UI.MainFontSize
 
+		// Sizes
+		title_size = float32(config.UI.TitleFontSize)
+		main_size  = float32(config.UI.MainFontSize)
+
 		// Colors
 		color_main          = rl.SkyBlue
 		color_box           = rl.DarkGray
@@ -232,31 +236,31 @@ func GUI_Start(config *Config) {
 		rl.ClearBackground(rl.RayWhite)
 
 		coord_main = rl.NewVector2(10, 0)
-		rect_main = rl.NewRectangle(0, 0, WINDOW_WIDTH, float32(config.UI.TitleFontSize))
+		rect_main = rl.NewRectangle(0, 0, WINDOW_WIDTH, title_size)
 
 		// Title with background
 		rl.DrawRectangleRec(rect_main, color_main)
-		rl.DrawTextEx(font_title, APP_TITLE, coord_main, float32(config.UI.TitleFontSize), 0, color_font_active)
+		rl.DrawTextEx(font_title, APP_TITLE, coord_main, title_size, 0, color_font_active)
 
 		// Add version number next to the title
 		coord_text = coord_main
-		coord_text.X += rl.MeasureTextEx(font_title, APP_TITLE, float32(config.UI.TitleFontSize), 0).X + 20 // Title width + some margin
-		coord_text.Y += float32(config.UI.TitleFontSize) / 2                                                // half the height of the title
-		rl.DrawTextEx(font_text, APP_VERSION, coord_text, float32(config.UI.MainFontSize), 0, color_font_active)
+		coord_text.X += rl.MeasureTextEx(font_title, APP_TITLE, title_size, 0).X + 20 // Title width + some margin
+		coord_text.Y += title_size / 2                                                // half the height of the title
+		rl.DrawTextEx(font_text, APP_VERSION, coord_text, main_size, 0, color_font_active)
 
 		// Increase Y for next usages
 		coord_main.Y += rect_main.Height
 		rect_main.Y += rect_main.Height
 
 		// Text input area background
-		rect_main.Height = float32(config.UI.MainFontSize) * 2
+		rect_main.Height = main_size * 2
 		rl.DrawRectangleRec(rect_main, color_main)
 
 		// Text input area coord (with margins each side)
-		rect_text = rl.NewRectangle(10, rect_main.Y, rect_main.Width-20, float32(config.UI.MainFontSize)*1.5)
+		rect_text = rl.NewRectangle(10, rect_main.Y, rect_main.Width-20, main_size*1.5)
 		coord_text = coord_main
 		coord_text.X += 10
-		coord_text.Y = rect_text.Y + float32(config.UI.MainFontSize)/3
+		coord_text.Y = rect_text.Y + main_size/3
 		if len(input_text) == 0 {
 			tmp_text = "Enter text here ..."
 			tmp_color = color_font_inactive
@@ -266,8 +270,8 @@ func GUI_Start(config *Config) {
 		}
 
 		rl.DrawRectangleRec(rect_text, color_text_area)
-		rl.DrawRectangleLinesEx(rect_text, 2, color_box)
-		rl.DrawTextEx(font_text, tmp_text, coord_text, float32(config.UI.MainFontSize), 0, tmp_color)
+		rl.DrawRectangleLinesEx(rect_text, 1, color_box)
+		rl.DrawTextEx(font_text, tmp_text, coord_text, main_size, 0, tmp_color)
 
 		// Increase Y for next usages
 		coord_main.Y += rect_main.Height
@@ -275,11 +279,14 @@ func GUI_Start(config *Config) {
 
 		// Scroll bar management
 		if nb_rules > int(config.Search.MaxResults) {
+			// bar width is relative to font size
+			bar_width := main_size / 2
+
 			// reduce the size of the background for rules to leave space for the scrolling bar
-			rect_main.Width -= float32(config.UI.MainFontSize)
+			rect_main.Width -= bar_width
 
 			// height of the whole scroll bar space
-			height := float32(config.UI.MainFontSize * config.Search.MaxResults)
+			height := main_size * float32(config.Search.MaxResults)
 
 			// height of the actual bar, proportionnal with the number of rules in the list
 			bar_height := height * float32(config.Search.MaxResults) / float32(nb_rules)
@@ -295,12 +302,12 @@ func GUI_Start(config *Config) {
 			vertical_offset := rect_main.Y + vertical_space*float32(first_display_rule)/float32(bottom)
 
 			// create the scrolling bar to fill the left side
-			rect_scroll = rl.NewRectangle(rect_main.Width, vertical_offset, float32(config.UI.MainFontSize), bar_height)
+			rect_scroll = rl.NewRectangle(rect_main.Width, vertical_offset, bar_width, bar_height)
 
-			rl.DrawRectangleRounded(rect_scroll, float32(config.UI.MainFontSize/2), 5, color_box)
+			rl.DrawRectangleRounded(rect_scroll, main_size/2, 5, color_box)
 		}
 
-		rect_main.Height = float32(config.UI.MainFontSize)
+		rect_main.Height = main_size
 		for i, texts := range strings_filtered[first_display_rule : last_display_rule+1] {
 			i += first_display_rule
 			if i == active_element {
@@ -321,8 +328,8 @@ func GUI_Start(config *Config) {
 				case 1:
 					tmp_color = color_font_active
 				}
-				rl.DrawTextEx(font_text, tmp_text, coord_text, float32(config.UI.MainFontSize), 0, tmp_color)
-				coord_text.X += rl.MeasureTextEx(font_text, tmp_text, float32(config.UI.MainFontSize), 0).X
+				rl.DrawTextEx(font_text, tmp_text, coord_text, main_size, 0, tmp_color)
+				coord_text.X += rl.MeasureTextEx(font_text, tmp_text, main_size, 0).X
 			}
 
 			// Increase Y for next usages
@@ -332,7 +339,7 @@ func GUI_Start(config *Config) {
 
 		// Outline rect
 		rect_text = rl.NewRectangle(0, 0, WINDOW_WIDTH, float32(WINDOW_HEIGHT))
-		rl.DrawRectangleLinesEx(rect_text, 2, color_box)
+		rl.DrawRectangleLinesEx(rect_text, 1, color_box)
 
 		rl.EndDrawing()
 

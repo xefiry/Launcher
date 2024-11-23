@@ -80,4 +80,4 @@ with ZipFile(f"{NAME}_{tag}_{ARCH}.zip", "w") as myzip:
         myzip.write(file, f"{NAME}/{file}")
 
 # clean executable
-run(["go", "clean"])
+#run(["go", "clean"])
