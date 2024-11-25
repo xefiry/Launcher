@@ -72,7 +72,6 @@ These rules will use regular expressions. Not implemented yet.
 
 List of ideas to implement in no particular order
 
-- Config/GUI: Add configuration for colours (use Hex colors rl.GetColor(0x007F00FF))
 - Misc: Simplify Rule.GetDisplayStrings
 - GUI: Improve selection colours
 - Rule: Manage environment variables in rule Exe/Args
