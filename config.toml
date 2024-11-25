@@ -8,6 +8,17 @@
   MainFontFile = "Fonts/CascadiaCode-SemiLight.ttf"
   MainFontSize = 22
 
+[Colors]
+  Main = "66BFFFFF"
+  Box = "505050FF"
+  TextArea = "F5F5F5FF"
+  FontActive = "000000FF"
+  FontInactive = "D3B083FF"
+  FontMatch = "E62937FF"
+  RowEven = "C8C8C8FF"
+  RowOdd = "828282FF"
+  RowSelected = "00E430FF"
+
 [[Rules]]
   Match = "C"
   Description = "Open C:\\"

@@ -1,6 +1,9 @@
 package main
 
 import (
+	"fmt"
+	"log"
+	"strconv"
 	"strings"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
@@ -22,15 +25,15 @@ func GUI_Start(config *Config) {
 		main_size  = float32(config.UI.MainFontSize)
 
 		// Colors
-		color_main          = rl.SkyBlue
-		color_box           = rl.DarkGray
-		color_text_area     = rl.RayWhite
-		color_font_active   = rl.Black
-		color_font_match    = rl.Red
-		color_font_inactive = rl.Beige
-		color_row_even      = rl.LightGray
-		color_row_odd       = rl.Gray
-		color_selected      = rl.Green
+		color_main          = parse_color("Main", &config.Colors.Main, rl.SkyBlue)
+		color_box           = parse_color("Box", &config.Colors.Box, rl.DarkGray)
+		color_text_area     = parse_color("TextArea", &config.Colors.TextArea, rl.RayWhite)
+		color_font_active   = parse_color("FontActive", &config.Colors.FontActive, rl.Black)
+		color_font_inactive = parse_color("FontInactive", &config.Colors.FontInactive, rl.Beige)
+		color_font_match    = parse_color("FontMatch", &config.Colors.FontMatch, rl.Red)
+		color_row_even      = parse_color("RowEven", &config.Colors.RowEven, rl.LightGray)
+		color_row_odd       = parse_color("RowOdd", &config.Colors.RowOdd, rl.Gray)
+		color_row_selected  = parse_color("RowSelected", &config.Colors.RowSelected, rl.Green)
 
 		// Coordinates
 		coord_main  rl.Vector2
@@ -311,7 +314,7 @@ func GUI_Start(config *Config) {
 		for i, texts := range strings_filtered[first_display_rule : last_display_rule+1] {
 			i += first_display_rule
 			if i == active_element {
-				tmp_color = color_selected
+				tmp_color = color_row_selected
 			} else if i%2 == 0 {
 				tmp_color = color_row_even
 			} else {
@@ -346,5 +349,34 @@ func GUI_Start(config *Config) {
 		// Uncomment this line to be able to measure performances
 		// It will close the program after the first loop
 		//is_running = false
+	}
+}
+
+func parse_color(name string, in *string, alt rl.Color) rl.Color {
+	valid := true
+	var err error
+	var colour int64
+
+	if len(*in) == 0 { // check empty/undefined string
+		valid = false
+
+	} else if len(*in) != 8 { // check invalid sized string
+		valid = false
+		log.Println(*in, ": invalid color format, has to be 8 character hex number (eg: 505050FF)")
+
+	} else { // check unparsable hex string
+		colour, err = strconv.ParseInt(*in, 16, 64)
+		if err != nil {
+			log.Println("error parsing color -", err)
+			valid = false
+		}
+	}
+
+	if valid {
+		return rl.GetColor(uint(colour))
+	} else {
+		*in = fmt.Sprintf("%02X%02X%02X%02X", alt.R, alt.G, alt.B, alt.A)
+		log.Println(name, ": using default color")
+		return alt
 	}
 }

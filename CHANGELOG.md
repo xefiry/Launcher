@@ -1,8 +1,9 @@
 # Changelog
 
-## Upcoming
+## v0.5
 
 - GUI: Improving looks
+- Config: Adding config for colors
 
 ## v0.4
 

@@ -21,6 +21,17 @@ type Config struct {
 		MainFontFile  string
 		MainFontSize  int32
 	}
+	Colors struct {
+		Main         string
+		Box          string
+		TextArea     string
+		FontActive   string
+		FontInactive string
+		FontMatch    string
+		RowEven      string
+		RowOdd       string
+		RowSelected  string
+	}
 	Rules []*Rule
 }
 
@@ -83,7 +94,6 @@ func NewConfig(filepath string) (*Config, error) {
 	}
 
 	return &config, nil
-
 }
 
 func (config *Config) Write(filepath string) error {
