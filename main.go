@@ -7,7 +7,7 @@ import (
 
 const (
 	APP_TITLE   = "The Launcher"
-	APP_VERSION = "v0.5"
+	APP_VERSION = "v0.6"
 	CONFIG_FILE = "config.toml"
 	LOG_FILE    = "launcher.log"
 )

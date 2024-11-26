@@ -74,7 +74,7 @@ List of ideas to implement in no particular order
 
 - GUI: Manage mouse scroll to scroll rules
 - Misc: Simplify Rule.GetDisplayStrings
-- GUI: Improve selection colors
+- GUI: Improve selected row display
 - Rule: Manage environment variables in rule Exe/Args
 - GUI: Ctrl + Z / Ctrl + Shift + Z to undo/redo
 - Rule: Add regexp management in rules

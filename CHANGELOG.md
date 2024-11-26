@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.6
+
+- Config: Improve color managements + Added possibility to use named colors (eg: Blue, Red, ...)
+
 ## v0.5
 
 - GUI: Improving looks
