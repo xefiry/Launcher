@@ -9,15 +9,15 @@
   MainFontSize = 22
 
 [Colors]
-  Main = "66BFFFFF"
-  Box = "505050FF"
-  TextArea = "F5F5F5FF"
-  FontActive = "000000FF"
-  FontInactive = "D3B083FF"
-  FontMatch = "E62937FF"
-  RowEven = "C8C8C8FF"
-  RowOdd = "828282FF"
-  RowSelected = "00E430FF"
+  Main = "SkyBlue"
+  Box = "DarkGray"
+  TextArea = "RayWhite"
+  FontActive = "Black"
+  FontInactive = "Beige"
+  FontMatch = "Red"
+  RowEven = "LightGray"
+  RowOdd = "Gray"
+  RowSelected = "Green"
 
 [[Rules]]
   Match = "C"

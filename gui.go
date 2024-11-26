@@ -1,8 +1,9 @@
 package main
 
 import (
-	"fmt"
+	"errors"
 	"log"
+	"regexp"
 	"strconv"
 	"strings"
 
@@ -25,15 +26,15 @@ func GUI_Start(config *Config) {
 		main_size  = float32(config.UI.MainFontSize)
 
 		// Colors
-		color_main          = parse_color("Main", &config.Colors.Main, rl.SkyBlue)
-		color_box           = parse_color("Box", &config.Colors.Box, rl.DarkGray)
-		color_text_area     = parse_color("TextArea", &config.Colors.TextArea, rl.RayWhite)
-		color_font_active   = parse_color("FontActive", &config.Colors.FontActive, rl.Black)
-		color_font_inactive = parse_color("FontInactive", &config.Colors.FontInactive, rl.Beige)
-		color_font_match    = parse_color("FontMatch", &config.Colors.FontMatch, rl.Red)
-		color_row_even      = parse_color("RowEven", &config.Colors.RowEven, rl.LightGray)
-		color_row_odd       = parse_color("RowOdd", &config.Colors.RowOdd, rl.Gray)
-		color_row_selected  = parse_color("RowSelected", &config.Colors.RowSelected, rl.Green)
+		color_main          = parse_color("Main", &config.Colors.Main, "SkyBlue")
+		color_box           = parse_color("Box", &config.Colors.Box, "DarkGray")
+		color_text_area     = parse_color("TextArea", &config.Colors.TextArea, "RayWhite")
+		color_font_active   = parse_color("FontActive", &config.Colors.FontActive, "Black")
+		color_font_inactive = parse_color("FontInactive", &config.Colors.FontInactive, "Beige")
+		color_font_match    = parse_color("FontMatch", &config.Colors.FontMatch, "Red")
+		color_row_even      = parse_color("RowEven", &config.Colors.RowEven, "LightGray")
+		color_row_odd       = parse_color("RowOdd", &config.Colors.RowOdd, "Gray")
+		color_row_selected  = parse_color("RowSelected", &config.Colors.RowSelected, "Green")
 
 		// Coordinates
 		coord_main  rl.Vector2
@@ -352,31 +353,106 @@ func GUI_Start(config *Config) {
 	}
 }
 
-func parse_color(name string, in *string, alt rl.Color) rl.Color {
-	valid := true
+func parse_color(name string, in *string, alt string) rl.Color {
 	var err error
 	var colour int64
+	var tmp string
 
-	if len(*in) == 0 { // check empty/undefined string
-		valid = false
+	// check if the input color is the name of a known color
+	col, err := str_to_color(*in)
+	if err == nil {
+		return col
+	}
 
-	} else if len(*in) != 8 { // check invalid sized string
-		valid = false
-		log.Println(*in, ": invalid color format, has to be 8 character hex number (eg: 505050FF)")
+	// check if the input is a 6 or 8 char hexadecimal number
+	re := regexp.MustCompile("^[0-9A-F]{6}([0-9A-F]{2})?$")
 
-	} else { // check unparsable hex string
-		colour, err = strconv.ParseInt(*in, 16, 64)
+	if re.MatchString(*in) { // if it matches
+
+		// if it is 6 char long, add FF (the alpha channel) at the end
+		if len(*in) == 6 {
+			tmp = *in + "FF"
+		} else {
+			tmp = *in
+		}
+
+		// parse the string
+		colour, err = strconv.ParseInt(tmp, 16, 64)
 		if err != nil {
-			log.Println("error parsing color -", err)
-			valid = false
+			log.Println(*in, "error parsing color -", err)
+		} else {
+			return rl.GetColor(uint(colour))
 		}
 	}
 
-	if valid {
-		return rl.GetColor(uint(colour))
-	} else {
-		*in = fmt.Sprintf("%02X%02X%02X%02X", alt.R, alt.G, alt.B, alt.A)
-		log.Println(name, ": using default color")
-		return alt
+	// if we are here, in is not a valid colour, we use alt
+	log.Printf("%v: invalid colour (%v) using default color %v", name, *in, alt)
+	col, err = str_to_color(alt)
+	if err != nil {
+		log.Panic(err)
+	}
+
+	// set in string with alt value
+	*in = alt
+
+	return col
+}
+
+func str_to_color(in string) (rl.Color, error) {
+	switch strings.ToLower(in) {
+	case "beige":
+		return rl.Beige, nil
+	case "black":
+		return rl.Black, nil
+	case "blank":
+		return rl.Blank, nil
+	case "blue":
+		return rl.Blue, nil
+	case "brown":
+		return rl.Brown, nil
+	case "darkblue":
+		return rl.DarkBlue, nil
+	case "darkbrown":
+		return rl.DarkBrown, nil
+	case "darkgray":
+		return rl.DarkGray, nil
+	case "darkgreen":
+		return rl.DarkGreen, nil
+	case "darkpurple":
+		return rl.DarkPurple, nil
+	case "gold":
+		return rl.Gold, nil
+	case "gray":
+		return rl.Gray, nil
+	case "green":
+		return rl.Green, nil
+	case "lightgray":
+		return rl.LightGray, nil
+	case "lime":
+		return rl.Lime, nil
+	case "magenta":
+		return rl.Magenta, nil
+	case "maroon":
+		return rl.Maroon, nil
+	case "orange":
+		return rl.Orange, nil
+	case "pink":
+		return rl.Pink, nil
+	case "purple":
+		return rl.Purple, nil
+	case "raywhite":
+		return rl.RayWhite, nil
+	case "red":
+		return rl.Red, nil
+	case "skyblue":
+		return rl.SkyBlue, nil
+	case "violet":
+		return rl.Violet, nil
+	case "white":
+		return rl.White, nil
+	case "yellow":
+		return rl.Yellow, nil
+	default:
+		return rl.Blank, errors.New("unknown color")
 	}
 }
