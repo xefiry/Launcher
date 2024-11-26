@@ -355,7 +355,7 @@ func GUI_Start(config *Config) {
 
 func parse_color(name string, in *string, alt string) rl.Color {
 	var err error
-	var colour int64
+	var color int64
 	var tmp string
 
 	// check if the input color is the name of a known color
@@ -377,16 +377,16 @@ func parse_color(name string, in *string, alt string) rl.Color {
 		}
 
 		// parse the string
-		colour, err = strconv.ParseInt(tmp, 16, 64)
+		color, err = strconv.ParseInt(tmp, 16, 64)
 		if err != nil {
 			log.Println(*in, "error parsing color -", err)
 		} else {
-			return rl.GetColor(uint(colour))
+			return rl.GetColor(uint(color))
 		}
 	}
 
-	// if we are here, in is not a valid colour, we use alt
-	log.Printf("%v: invalid colour (%v) using default color %v", name, *in, alt)
+	// if we are here, in is not a valid color, we use alt
+	log.Printf("%v: invalid color (%v) using default color %v", name, *in, alt)
 	col, err = str_to_color(alt)
 	if err != nil {
 		log.Panic(err)

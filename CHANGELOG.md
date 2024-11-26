@@ -12,7 +12,7 @@
 
 ## v0.3
 
-- GUI: Adding colour in matching result to clearly see what part of the rule matches with the input
+- GUI: Adding color in matching result to clearly see what part of the rule matches with the input
 - Config: Added configurations values for font selection/size and max displayed results
 - Config: Added configuration to enable search by rule description
 
