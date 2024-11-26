@@ -72,7 +72,6 @@ These rules will use regular expressions. Not implemented yet.
 
 List of ideas to implement in no particular order
 
-- Config: Improve color managements + Add possibility to use named colors (eg: Blue, Red, ...)
 - GUI: Manage mouse scroll to scroll rules
 - Misc: Simplify Rule.GetDisplayStrings
 - GUI: Improve selection colours
