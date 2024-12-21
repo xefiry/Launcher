@@ -1,4 +1,4 @@
-package main
+package launcher
 
 import (
 	"errors"
@@ -8,6 +8,11 @@ import (
 	"time"
 
 	"github.com/BurntSushi/toml"
+)
+
+const (
+	APP_TITLE   = "The Launcher"
+	APP_VERSION = "v0.6"
 )
 
 type Config struct {

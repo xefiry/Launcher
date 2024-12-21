@@ -3,11 +3,11 @@ package main
 import (
 	"log"
 	"os"
+
+	"github.com/xefiry/launcher/launcher"
 )
 
 const (
-	APP_TITLE   = "The Launcher"
-	APP_VERSION = "v0.6"
 	CONFIG_FILE = "config.toml"
 	LOG_FILE    = "launcher.log"
 )
@@ -25,7 +25,7 @@ func main() {
 	}
 
 	// read config from file
-	config, err := NewConfig(CONFIG_FILE)
+	config, err := launcher.NewConfig(CONFIG_FILE)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -33,5 +33,5 @@ func main() {
 	// make sure to write it back at the end
 	defer config.Write(CONFIG_FILE)
 
-	GUI_Start(config)
+	launcher.GUI_Start(config)
 }
