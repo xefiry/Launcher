@@ -12,7 +12,7 @@ import (
 
 const (
 	APP_TITLE   = "The Launcher"
-	APP_VERSION = "v0.6"
+	APP_VERSION = "v1.0"
 )
 
 type Config struct {

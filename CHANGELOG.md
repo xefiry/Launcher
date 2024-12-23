@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.0
+
+- Misc: Improve code structure
+- Misc: Update dependencies (raylib 5.0 -> 5.5)
+
 ## v0.6
 
 - Config: Improve color managements + Added possibility to use named colors (eg: Blue, Red, ...)
