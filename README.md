@@ -3,15 +3,25 @@
 
 A fast configurable launcher
 
-![screenshot](Images/screenshot_v0.5.png)
+![screenshot](Images/screenshot_v1.0.png)
 
 Status: in development (expect breaking changes)
 
 ## Build
 
-For Windows without cgo (CGO_ENABLED=0), the raylib.dll v5.0 is included in this repository.
+For Windows without cgo (CGO_ENABLED=0), the raylib.dll v5.5 is included in this repository.
 
 For other OS or Windows with cgo, check [raylib-go Requirements](https://github.com/gen2brain/raylib-go#Requirements).
+
+### Automatic build
+
+Use the python script to build the program and create a ready to use .zip file.
+
+```shell
+python build.py
+```
+
+### Manual build
 
 Use this command to build for release
 
@@ -66,7 +76,7 @@ These rules will use regular expressions. Not implemented yet.
 ## Resources
 
 - Font Cascadia code : <https://github.com/microsoft/cascadia-code>
-- Raylib DLL : <https://github.com/raysan5/raylib/releases/tag/5.0>
+- Raylib DLL : <https://github.com/raysan5/raylib/releases/tag/5.5>
 
 ## ToDo list
 
