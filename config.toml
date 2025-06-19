@@ -53,3 +53,15 @@
   Match = "ex_noargs"
   Description = "Example rule (no args)"
   Exe = "dummy.exe"
+
+[[Rules]]
+  Match = "python_script"
+  Description = "Run script.py in PowerShell 7"
+  Exe = "wt"
+  Args = ["pwsh.exe", "-wd", "C:\\Users\\xefiry", "-Command", "python.exe 'scipt.py'"]
+
+[[Rules]]
+  Match = "python_script"
+  Description = "Run script.py in PowerShell 7"
+  Exe = "wt"
+  Args = ["pwsh.exe", "-wd", "D:\\Videos\\", "-Command", "python.exe 'D:\\Code\\Python\\_sandbox\\src\\__main__.py'"]

@@ -5,7 +5,7 @@ A fast configurable launcher
 
 ![screenshot](Images/screenshot_v1.0.png)
 
-Status: in development (expect breaking changes)
+Status: abandoned. Use [Launcher2](https://github.com/xefiry/Launcher2) instead.
 
 ## Build
 
@@ -40,8 +40,10 @@ The final executable should be shipped with
 
 ## Limitations
 
-- The launcher can not start TUI programs (e.g.: vim)
 - There can not be comments in the config.toml file
+- The launcher can not start command line or TUI programs (e.g.: ffmpeg, vim) directly, because they will not show. The workaroud is to start a terminal emulator with args to execute it. See examples in config.toml.
+
+Open Windows terminal and run pwsh.exe with a python script
 
 ## Controls
 
